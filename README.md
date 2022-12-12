@@ -18,37 +18,33 @@ Python 3.8 on Ubuntu 20.04
 
 3. Install dependencies. For example,
 ```
-(venv) # pip install numpy pandas tables spflow, sqlparse, psycopg2
+# pip install numpy pandas tables spflow sqlparse psycopg2
 
 // If you want to use REST interface (Fast API), install the followings as well
-(venv) # pip install fastapi uvicorn requests psutil
+# pip install fastapi uvicorn requests psutil
 
 // cf. requirements.txt
 ```
-## Running Option1: TrainDBCliModelRunner
-### Training
+## Running (Learning and Inference)
 ```
-(venv) # python3 TrainDBCliModelRunner.py train2 RSPN model/types/RSPN.py instacart data/files/instacart/csv/orders.csv data/files/ model/instances 0.3 10 10000000 
+cd ai503-project/
+# python3 test.py 
 
-(some warnings...)
+// arguments
+// - model type and its file: RSPN model/types/RSPN.py 
+// - train data name, its file and location: instacart data/files/instacart/csv/orders.csv data/files/ 
+// - learned model location: model/instances 
+// - RDC threshold, sampling factor and its size : 0.3 10 10000000 
+//   (RDC for determining correlation between columns(features))
 ```
-- **command**: command for RSPN testing (ex, **train2**)
-- **modeltype_class**: name of the model (class) (ex, **RSPN**)
-- **modeltype_uri**: path for the model class file (ex, **model/types/RSPN.py**)
-- **data_name**: name(space) of the training dataset, (ex, **instacart**)
-- **data_file**: path to the training dataset, (ex, **data/files/instacart/csv/orders.csv**)
-- **metadata_root**: root dir of the metadata(.json or .hdf) (ex, **data/files/**)
-- **model_path**: (root) path to the generated model (ex, **model/instances**)
-- **rdc_threshold**: (float) RDC threshold (ex, **0.3**)
-- **post_sampling_factor**: (int) post sampling factor (ex, **10**)
-- **sample_size**: sample size (ex, **10000000**)
-
-### Estimation
-**TBD**
-
-## Running Option2: Instantiate RSPN
-### Training and Estimation
-1. Write a script. For example, test.py
+### Sample Result
+#### Query: SELECT COUNT(*) FROM orders WHERE order_dow >= 2
+```
+model/instances/ensemble1_single_instacart_10000000.pkl
+SELECT COUNT(*) FROM orders WHERE order_dow >= 2
+((1343995.131280017, 1347515.079651983), 1345755.105466)
+```
+### Test code: test.py
 ```
 from model.types.RSPN import RSPN
 
@@ -70,31 +66,21 @@ print(query)
 result = app.estimate(query, 'instacart', app.table_csv_path, model_path, True)
 print(result)
 ```
-2. Check the result:
-```
-(venv) # python3 test.py
 
-(some warnings...)
-
-model/instances/ensemble1_single_instacart_10000000.pkl
-SELECT COUNT(*) FROM orders WHERE order_dow >= 2
-((1343995.131280017, 1347515.079651983), 1345755.105466)
-```
-## Running Option3: REST API (using Fast API)
-
+## Running with REST API (using Fast API)
 1. Execute the **rest.py**. 
 The default host address and port (http://0.0.0.0:8000) will be applied if no args specified.
 - run the following command if not installed
 ```
-(venv) # pip install fastapi uvicorn requests psutil
+# pip install fastapi uvicorn requests psutil
 ```
 - launch the rest service
 ```
-(venv) # python3 rest.py
+# python3 rest.py
 ```
   - For setting up your own address/port (e.g., http://127.0.0.1:8080):
     ```
-    (venv) # python3 rest.py --rest_host 127.0.0.1 --rest_port 8080
+    # python3 rest.py --rest_host 127.0.0.1 --rest_port 8080
     ```
 
 2. Open a web browser and go to the address you specified.
@@ -196,8 +182,5 @@ The default host address and port (http://0.0.0.0:8000) will be applied if no ar
   print(response.status_code)
   print(result['Estimated Value'])
   ```
-## Using KubeFlow
-- See [/interface](https://github.com/traindb-project/traindb-ml/tree/main/interface)
-
 ## License
 This project is dual-licensed. Apache 2.0 is for traindb-ml, and MIT is for the RSPN codes from deepdb(https://github.com/DataManagementLab/deepdb-public)
