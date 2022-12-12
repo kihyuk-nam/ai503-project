@@ -2,9 +2,10 @@ from model.types.RSPN import RSPN
 
 app = RSPN()
 model_path = app.train('instacart', 
-                       '/home/nam/Projects/datasets/instacart/orders.csv', 
+                       'data/files/instacart/csv/orders.csv', 
                        'data/files/', 
-                       'model/instances')
+                       'model/instances',
+                       0.3, 10, 10000000)
 print(model_path)
 query = 'SELECT COUNT(*) FROM orders WHERE order_dow >= 2'
 print(query)
