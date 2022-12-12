@@ -6,8 +6,7 @@ Python 3.8 on Ubuntu 20.04
 ## Setting up
 1. Download the codes.
 ```
-# git clone https://github.com/traindb-project/traindb-model.git
-# cd traindb-model/test
+# git clone https://github.com/kihyuk-nam/ai503-project.git
 ```
 2. (Option) Create a virtual environment (using venv or conda).
   - For venv: (See:https://docs.python.org/3/library/venv.html)
